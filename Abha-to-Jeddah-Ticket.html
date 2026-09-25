@@ -1,38 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>  Abha to Jeddah</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses & ECTS Credits</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      padding: 24px;
+      margin: 0;
+    }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      border: 1px solid #e2e8f0;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #1e293b;
+    }
+    .btn-all {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .btn-all:hover {
+      background-color: #1d4ed8;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 8px;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .course-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .course-title {
+      font-weight: 600;
+      color: #334155;
+    }
+    .course-ects {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .btn-copy {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .btn-copy.copied {
+      background-color: #10b981;
+      color: white;
+      border-color: #10b981;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="date-time"></div>
-        <h1>  Abha to Jeddah Ticket</h1>
-        <p>Written Date: <span id="written-date"></span></p>
-        
-        <div class="photos">
-            <div class="photo">
-                <img src="a.png" alt="Photo 1">
-            </div>
-            <div class="photo">
-                <img src="b.jpg" alt="Photo 2">
-            </div>
-            <div class="photo">
-                <img src="c.jpg" alt="Photo 3">
-            </div>
-        </div>
+<div class="container">
+  <div class="header">
+    <h2>Course List</h2>
+    <button class="btn-all" onclick="copyAll(this)">Copy All Courses</button>
+  </div>
+  
+  <ul id="courseList"></ul>
+</div>
 
-        <div class="buttons">
-            <button onclick="printPage()">Print</button>
-            <button onclick="copyContent()">Copy Content</button>
-            <button onclick="sendWhatsApp()">Send by WhatsApp</button>
-            <button onclick="sendEmail()">Send by Email</button>
-        </div>
-    </div>
+<script>
+  const courses = [
+    { title: "Marketing Management", ects: 6 },
+    { title: "Strategic Management", ects: 6 },
+    { title: "People Management", ects: 6 },
+    { title: "Data Analysis", ects: 6 },
+    { title: "Business Intelligence", ects: 6 },
+    { title: "Financial Management", ects: 6 },
+    { title: "Applied Entrepreneurship and Innovation", ects: 6 },
+    { title: "Digital Marketing", ects: 6 },
+    { title: "Management Seminars", ects: 6 },
+    { title: "Business Research Methodology", ects: 6 },
+    { title: "Business and Management Cases Analysis", ects: 6 },
+    { title: "Operations Management", ects: 6 },
+    { title: "Dissertation / Project / Internship Report", ects: 42 }
+  ];
 
-    <script src="script.js"></script>
+  const listContainer = document.getElementById('courseList');
+
+  courses.forEach(course => {
+    const li = document.createElement('li');
+    
+    const textContent = `${course.title} - ${course.ects} ECTS`;
+
+    li.innerHTML = `
+      <div class="course-info">
+        <span class="course-title">${course.title}</span>
+        <span class="course-ects">${course.ects} ECTS</span>
+      </div>
+      <button class="btn-copy" onclick="copyItem(this, '${textContent}')">Copy</button>
+    `;
+    
+    listContainer.appendChild(li);
+  });
+
+  function copyItem(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  function copyAll(btn) {
+    const fullText = courses.map(c => `${c.title} - ${c.ects} ECTS`).join('\n');
+    navigator.clipboard.writeText(fullText).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = 'All Copied!';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 1500);
+    });
+  }
+</script>
+
 </body>
 </html>
